@@ -5,3 +5,4 @@ Team members
   - Yeni Liang, yl1004@mun.ca
   - Ibrahim Alonge, tia461@mun.ca
   - zahed hatooni , zk8084@mun.ca
+  - Silvana Pereira, srp112@mun.ca
