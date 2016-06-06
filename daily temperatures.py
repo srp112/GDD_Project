@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt, pylab
+import matplotlib.pyplot as plt
 
 def max_min_temp(y, z, city):
     fig = plt.figure()
