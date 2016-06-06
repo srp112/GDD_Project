@@ -14,3 +14,5 @@ def gdd(DataSet, base):
 
 DataSet = data
 gdd(DataSet, 10)
+
+np.savetxt('/Users/air/Desktop/GDD_Calculation.csv', gdd(DataSet, 10), delimiter = ',')
