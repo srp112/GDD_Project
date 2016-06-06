@@ -7,4 +7,4 @@ Team members
   - Minhaj Shunjaruff, ms0185@mun.ca
   - zahed hatooni , zk8084@mun.ca
   - Silvana Pereira, srp112@mun.ca
-  - Farhad Kazeminia, 	fmkazemia@gmail.com
+  - Farhad M. Kazemi, 	fmk455@mun.ca
