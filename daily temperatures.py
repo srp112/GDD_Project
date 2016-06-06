@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt, pylab
 
-
 def max_min_temp(y, z, city):
     fig = plt.figure()
     x = np.linspace(0, 365, 365)
@@ -12,9 +11,9 @@ def max_min_temp(y, z, city):
 
     plt.title("min/max daily temperatures" + city, color='green', fontsize='20')
     plt.xlabel("days", fontsize='15')
-    plt.legent(loc=1)
+    plt.legend(loc=1)
     plt.ylabel("temperatures", fontsize='15')
-    plt.legent(loc=2)
+    plt.legend(loc=2)
 
     plt.show()
 
