@@ -148,7 +148,7 @@ finally:
 #os.makedirs(os.path.dirname(FolderName), exist_ok=True)
 for index, city in enumerate(Cities):
 	filename = city[0] + ',' + city[1]
-	with open(FolderName + '/' + filename + '.csv', 'w') as CityFile:
+	with open(FolderName + filename + '.csv', 'w') as CityFile:
 		CityFile.write('"Year","Month","Day","Max Temp","Min Temp"\n')
 		Data[index].sort(key = operator.itemgetter(0, 1, 2))
 		for row in Data[index]:
