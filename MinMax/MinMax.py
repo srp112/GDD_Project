@@ -35,17 +35,20 @@ for line in my_file.splitlines():
       val = list(csv.reader(files))[26:]
       #print(val)
       max_temp = list(zip(*val))[5]
+      max_temp = ['0' if x is '' else x for x in max_temp] 
+      #print(b)
       min_temp = list(zip(*val))[7]
+      min_temp = ['0' if x is '' else x for x in min_temp] 
       fig = plt.figure()
       plt.plot(max_temp, 'r', label="Max")
       plt.plot(min_temp, 'g', label="Min")
-      plt.title("min/max daily temperatures")
-      plt.ylabel("Temp.")
       plt.xlabel("Day")
-      
+      plt.ylabel("Temp.")
+      plt.title("Min/Max daily temp "+file_name,fontsize=18,color='g')
       plt.legend()
-      plt.show()
-      print(max_temp,min_temp)
+      plt.pause(2)
+      plt.draw()
+      #print(max_temp,min_temp)
      
     except IOError as err:
        print("error", err)
