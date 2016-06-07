@@ -36,9 +36,14 @@ for line in my_file.splitlines():
       #print(val)
       max_temp = list(zip(*val))[5]
       min_temp = list(zip(*val))[7]
-      plt.plot(max_temp)
-      plt.twinx()
-      plt.draw()
+      fig = plt.figure()
+      plt.plot(max_temp, 'r', label="Max")
+      plt.plot(min_temp, 'g', label="Min")
+      plt.title("min/max daily temperatures")
+      plt.ylabel("Temp.")
+      plt.xlabel("Day")
+      
+      plt.legend()
       plt.show()
       print(max_temp,min_temp)
      
