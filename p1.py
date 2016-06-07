@@ -143,9 +143,7 @@ except Exception as e:
 	FolderName = ''
 finally:
     os.umask(original_umask)
-#if not os.path.exists(FolderName):
-#    os.mkdir(FolderName, mode = 0o777)
-#os.makedirs(os.path.dirname(FolderName), exist_ok=True)
+    
 for index, city in enumerate(Cities):
 	filename = city[0] + ',' + city[1]
 	with open(FolderName + '/' + filename + '.csv', 'w') as CityFile:
