@@ -10,8 +10,7 @@ StationInventoryURL = 'ftp://client_climate@ftp.tor.ec.gc.ca/Pub/Get_More_Data_P
 MissingDataThreshold = 0.20
 RequestTimeOut = 30
 FolderName = 'data'
-
-logfile = 0
+LogFileName = 'log_download.txt'
 
 def exit():
 	print('Program ended prematuraly')
@@ -39,8 +38,9 @@ def removeInitialLines(f, LinesToRemove):
 		BeginIndex = f.find('\n', BeginIndex + 1)
 	return f[BeginIndex + 1:len(f) - 1]
 
+logfile = 0
 try:
-	logfile = open('log_p1.txt', 'w')
+	logfile = open(LogFileName, 'w')
 except IOError:
 	print('Error creating log file')
 
@@ -86,6 +86,7 @@ except Exception as e:
 	exit()
 else:
 	StationInventoryReader = csv.DictReader(removeInitialLines(data, 3).split('\n'))
+	log('Successfully downloaded Station Inventory EN.csv\n')
 
 Data = []
 for i in range(0, len(Cities)):
@@ -104,9 +105,9 @@ for row in StationInventoryReader:
 								PayLoad['stationID'] = row['Station ID']
 								PayLoad['Year'] = str(year)
 								try:
-									r = requests.get('http://climate.weather.gc.ca/climate_data/bulk_data_e.html', params = PayLoad, timeout = RequestTimeOut)
+									r = requests.get('http://climate.weather.gc.ca/climate_data/bulk_data_e.html', params = PayLoad, 														timeout = RequestTimeOut)
 								except Exception as e:
-									log('Failed to download data for station ' + row['Name'] + ' ID ' + row['Station ID'] + ' year ' + str(year))
+									log('Failed to download data for station ' + row['Name'] + ' ID ' + row['Station ID'] + ' year ' + 											str(year))
 								else:
 									DataReader = list(csv.DictReader(removeInitialLines(r.text, 25).split('\n')))
 									
@@ -117,20 +118,20 @@ for row in StationInventoryReader:
 										NumOfDays = (date.today() - date(year, 1, 1)).days
 										
 									MissingData = 0
-									for i, line in enumerate(DataReader):
-										if (line['Max Temp (°C)'] == '' or line['Min Temp (°C)'] == '') and i < NumOfDays:
+									for i in range(0, min(len(DataReader), NumOfDays)):
+										if (DataReader[i]['Max Temp (°C)'] == '' or DataReader[i]['Min Temp (°C)'] == ''):
 											MissingData += 1
 										
 									if MissingData / NumOfDays <= MissingDataThreshold:
-										log('Downloading data for ' + city[0] + ', year ' + str(year))		
+										log('Downloading data for ' + city[0] + ', year ' + str(year))
 										try:							
 											Cities[index][2].remove(year)
 										except IndexError:
 											print('IndexError at index ', str(index))
-										for line in DataReader:
-											Data[index].append([line['Year'], line['Month'], line['Day'], line['Max Temp (°C)'], line['Min Temp (°C)']])
+										for i in range(0, min(len(DataReader), NumOfDays)):
+											Data[index].append([DataReader[i]['Year'], DataReader[i]['Month'], DataReader[i]['Day'], 																	DataReader[i]['Max Temp (°C)'], DataReader[i]['Min Temp (°C)']])
 									else:
-										log('Rejected file for ' + city[0] + ', year ' + str(year) + ', ' + str(round(MissingData / NumOfDays * 100, 2)) + '% data missing')
+										log('Rejected file for ' + city[0] + ', year ' + str(year) + ', ' + 											str(round(MissingData / NumOfDays * 100, 2)) + '% data missing')
 
 log('\n...Writing the downloaded data to storage...')
 
