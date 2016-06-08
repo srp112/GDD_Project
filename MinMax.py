@@ -2,6 +2,7 @@ import sys, argparse, csv
 import numpy as np
 import scipy.linalg as la
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 
 
 def open_file(file_name, mode):
@@ -29,25 +30,36 @@ print(my_file)
 extension=".csv"
 for line in my_file.splitlines():
     file_name=line+extension
+  
     print(file_name) 
     try:
-     with open(file_name, "rU") as files:
-      val = list(csv.reader(files))[26:]
+     with open('data/'+file_name, "rU") as files:
+      val = list(csv.reader(files))[1:]
       #print(val)
-      max_temp = list(zip(*val))[5]
+      max_temp = list(zip(*val))[3]
       max_temp = ['0' if x is '' else x for x in max_temp] 
       #print(b)
-      min_temp = list(zip(*val))[7]
+      min_temp = list(zip(*val))[4]
       min_temp = ['0' if x is '' else x for x in min_temp] 
+      #x=np.linspace(1,365,365, endpoint=True)
       fig = plt.figure()
       plt.plot(max_temp, 'r', label="Max")
       plt.plot(min_temp, 'g', label="Min")
       plt.xlabel("Day")
       plt.ylabel("Temp.")
-      plt.title("Min/Max daily temp "+file_name,fontsize=18,color='g')
+      plt.title("Min/Max Daily Temp "+line,fontsize=18,color='g')
       plt.legend()
       plt.pause(2)
       plt.draw()
+      figs=None
+      pp = PdfPages("Min_Max_Daily_Temp.pdf")
+      if figs is None:
+         figs = [plt.figure(n) for n in plt.get_fignums()]
+      for fig in figs:
+        fig.savefig(pp, format='pdf')
+      pp.close()
+      
+      
       #print(max_temp,min_temp)
      
     except IOError as err:
