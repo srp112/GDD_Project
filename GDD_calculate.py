@@ -1,18 +1,33 @@
-import pandas as pd
-import numpy as np
-import matplotlib as plt
 import csv
+import os
+import argparse as arg
 
-with open('/Users/air/Desktop/saskatoon.csv', 'r') as f:
-    # = list(csv.DictReader(f))
-    with open('/Users/air/Desktop/saskatoonGDD.csv', 'w') as newfile:
-        writer = csv.writer(newfile)
+parser = arg.ArgumentParser(description='Accept input and calculate GDD.')
+parser.add_argument('csv', metavar='CSV File Name', type=str, help='Complete File Path of CSV File (Required!).')
+parser.add_argument('tbase', metavar='Base Temperature', type=float, nargs='?', default=10, help='Base Temperature (default: 10).')
+parser.add_argument('tupper', metavar='Upper Temperature', type=float, nargs='?', default=30, help='Upper Temperature (default: 30).')
+
+args = parser.parse_args()
+
+with open(args.csv, 'r') as f:
+    with open('tmp_'+args.csv, 'w') as newfile:
+        writer = csv.writer(newfile, lineterminator='\n')
         for row in csv.reader(f):
-            if row[0] == "Year":
-                writer.writerow(row+["GDD"])
+            if row[0] == 'Year':
+                writer.writerow(row+['GDD'])
             else:
-                GDD = ((float(row[3]) + float(row[4])) / 2) - 10
-                if GDD <= 0:
-                    writer.writerow(row+[str(0)])
+                #How to handle missing info in csv file should be discussed
+                if row[3]=='' or row[4]=='':
+                    GDD = 0
+                #Use GDD = 0 for missing info here
                 else:
-                    writer.writerow(row+[str(GDD)]) 
+                    upper = min(float(row[3]), args.tupper)
+                    lower = float(row[4])
+                    GDD = ((upper + lower) / 2) - args.tbase
+                    if GDD < 0:
+                        GDD = 0
+                #Round to 2 digit floating number
+                writer.writerow(row+['%.2f' % (GDD)])
+os.remove(args.csv)
+os.rename('tmp_'+args.csv, args.csv)
+
