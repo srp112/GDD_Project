@@ -15,8 +15,8 @@ with open(args.csv, 'r') as cf:
             #pass    # do something here  
             print(line)
             line=line.strip('\n')
-            with open(line+'.csv', 'r') as f:
-                with open('tmp_'+line+'.csv', 'w') as newfile:
+            with open('data/'+line+'.csv', 'r') as f:
+                with open('data/tmp_'+line+'.csv', 'w') as newfile:
                     writer = csv.writer(newfile, lineterminator='\n')
                     for row in csv.reader(f):
                         if row[0] == 'Year':
@@ -34,7 +34,7 @@ with open(args.csv, 'r') as cf:
                                     GDD = 0
                             #Round to 2 digit floating number
                             writer.writerow(row+['%.2f' % (GDD)])
-            os.remove(line+'.csv')
-            os.rename('tmp_'+line+'.csv', line+'.csv')
+            #os.remove('data/'+line+'.csv')
+            os.rename('data/tmp_'+line+'.csv', 'data/'+line+'.csv')
         else:  
             break
