@@ -74,10 +74,7 @@ for line in my_file.splitlines():
 
 
 
-    """days, impressions = np.loadtxt('data/'+ file_name, unpack=True,
-    converters={ 0: mdates.strpdate2num('%Y-%m-%d')})
-    plt.legend(loc='upper left')
-            
+   
     
     
   
