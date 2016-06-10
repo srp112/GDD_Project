@@ -4,27 +4,19 @@ import scipy.linalg as la
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 from  more_itertools import unique_everseen
-
-
 def MinMax(file_name,year, mode):
-    """Open Cities.txt file."""
+    """Cities.txt Year as an argument"""
     try:
         with open(file_name, 'r') as the_file:
           filename=the_file.read()
           
     except IOError as err:
-        print("Unable to open the file", file_name, "Ending program...\n", err)
-        sys.exit()
+        print( err)
+        sys.exit()  
     #else:
         #return filename
-
-    """Cities.txt Year as an argument"""     
-    try:
-       my_file = filename
-    except:
-       print("MinMax needs two arguments", "\nEnding program...\n")
-       sys.exit()
-
+    
+    my_file = filename
 
     extension=".csv"
     for line in my_file.splitlines():
@@ -72,7 +64,14 @@ def MinMax(file_name,year, mode):
          
       except IOError as err:
         print("error", err)
-MinMax(sys.argv[1],sys.argv[2], 'r')        
+try:
+       my_file = MinMax(sys.argv[1],sys.argv[2], 'r') 
+except:
+       print("MinMax needs two arguments. Ex- MinMax.py Cities.txt 2010", "\nEnding program...\n")
+       sys.exit()
+       
+        
+
         
 
 
