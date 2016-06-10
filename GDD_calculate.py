@@ -1,40 +1,34 @@
 import csv
 import os
+import copy
 import argparse as arg
 
 parser = arg.ArgumentParser(description='Accept input and calculate GDD.')
-parser.add_argument('csv', metavar='CSV File Name', type=str, help='Complete File Path of Cities File (Required!).')
+parser.add_argument('file', metavar='a txt file', type=str, help='Complete File Path of Cities File (Required!).')
 parser.add_argument('tbase', metavar='Base Temperature', type=float, nargs='?', default=10, help='Base Temperature (default: 10).')
 parser.add_argument('tupper', metavar='Upper Temperature', type=float, nargs='?', default=30, help='Upper Temperature (default: 30).')
 
+FolderName = 'data'
+
 args = parser.parse_args()
-with open(args.csv, 'r') as cf:
-    while True:
-        line = cf.readline()  
-        if line:  
-            #pass    # do something here  
-            print(line)
-            line=line.strip('\n')
-            with open('data/'+line+'.csv', 'r') as f:
-                with open('data/tmp_'+line+'.csv', 'w') as newfile:
-                    writer = csv.writer(newfile, lineterminator='\n')
-                    for row in csv.reader(f):
-                        if row[0] == 'Year':
-                            writer.writerow(row+['GDD'])
-                        else:
-                            #How to handle missing info in csv file should be discussed
-                            if row[3]=='' or row[4]=='':
-                                GDD = 0
-                            #Use GDD = 0 for missing info here
-                            else:
-                                upper = min(float(row[3]), args.tupper)
-                                lower = float(row[4])
-                                GDD = ((upper + lower) / 2) - args.tbase
-                                if GDD < 0:
-                                    GDD = 0
-                            #Round to 2 digit floating number
-                            writer.writerow(row+['%.2f' % (GDD)])
-            #os.remove('data/'+line+'.csv')
-            os.rename('data/tmp_'+line+'.csv', 'data/'+line+'.csv')
-        else:  
-            break
+with open(args.file, 'r') as cf:
+	for filename in cf.read().splitlines():
+		newData = []
+		with open(FolderName + '/' + filename + '.csv' , 'r') as f:
+			reader = csv.reader(f)
+			newData.append(next(reader) + ['GDD'])
+			for row in reader:
+				GDD = ''
+				MinTemp = row[3]
+				MaxTemp = row[4]
+				if MinTemp != '' and MaxTemp != '':
+					upper = min(float(MinTemp), args.tupper)
+					lower = float(MaxTemp)
+					GDD = round(((upper + lower) / 2) - args.tbase, 2)
+					if GDD < 0:
+						GDD = 0
+				newData.append(row + [str(GDD)])
+		with open(FolderName + '/' + filename + '.csv' , 'w') as f:
+			writer = csv.writer(f, lineterminator = '\n')
+			for row in newData:
+				writer.writerow(row)
