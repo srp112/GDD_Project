@@ -1,7 +1,7 @@
 all: report.pdf
 
 data.csv:
-      curl ftp://client_climate@ftp.tor.ec.gc.ca/Pub/Get_More_Data_Plus_de_donnees/Station%20Inventory%20EN.csv
+      curl -o data.csv ftp://client_climate@ftp.tor.ec.gc.ca/Pub/Get_More_Data_Plus_de_donnees/Station%20Inventory%20EN.csv
 
 plot.png: data.csv
       python plot.py  data.csv
