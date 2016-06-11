@@ -1,6 +1,9 @@
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
+
+FolderName = 'data'
 
 def get_marker_color(GDD):
     # Returns red for small GDD, yellow for moderate
@@ -39,3 +42,15 @@ for label, xpt, ypt in zip(labels, x, y):
     plt.text(xpt+100000,ypt+100000, label) #distance of labels: 10 Km East and 10 Km North
 
 plt.show()
+
+#Read GDD data
+with open(sys.argv[1], 'r') as cf:
+	for filename in cf.read().splitlines():
+		GDD = []
+		with open(FolderName + '/' + filename + '.csv', 'r') as f:
+			reader = csv.DictReader(f)
+			for row in reader:
+				if row['GDD'] != '':
+					GDD.append(row)
+		for value in GDD:
+			print(value['Year'], '/', value['Month'], '/', value['Day'], ' ', value['GDD']) 
