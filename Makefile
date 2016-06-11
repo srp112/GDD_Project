@@ -38,3 +38,7 @@ report.pdf: report.tex plot.png
 #Question 9: Create a testsuite 
 
 #Question 10: adequate documentation
+
+#clean:
+#	rm -f report.log report.aux report.pdf
+#	rm -f data.csv plot.png
