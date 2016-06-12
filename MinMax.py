@@ -48,20 +48,20 @@ def MinMax(file_name,year, mode):
             plt.pause(2)
             plt.draw()
             figs=None
-            save_plot = PdfPages("Min_Max_Daily_Temp.pdf")
+            save_plot = 'Plot{0:02d}.png'
+            #save_plot = PdfPages("Min_Max_Daily_Temp.pdf")
             if figs is None:
                figs = [plt.figure(n) for n in plt.get_fignums()]
-            for fig in figs:
-              fig.savefig(save_plot, format='pdf')
-            save_plot.close()
+            for count,fig in enumerate(figs):
+               fig.savefig(save_plot.format(count), format='png')
+               #fig.clf()  # Clear the figure for the next loop
+            #save_plot.close()
+          
           else:
            print("No data available for Year - "+year)  
            break
-          
-
-
-           
-         
+     
+             
       except IOError as err:
         print("error", err)
 try:
