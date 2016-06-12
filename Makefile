@@ -1,4 +1,4 @@
-all: report.pdf
+all: report.pdf cities.txt
 
 #Question 1
 data.csv :
@@ -8,7 +8,7 @@ data.csv :
      # python download.py
 
 #Question 2
-Plotminmax.png : data.csv MinMax.py Cities.txt
+Plotminmax.png : data.csv MinMax.py cities.txt  
 	python MinMax.py cities.txt 2010
                                    #data.csv
 
@@ -25,12 +25,12 @@ Plot_accumulatedGDD.png : data.csv cumGDDplot.py
 # Github
       
 #Question 6   # Plot_accumulatedGDD.png
-report.pdf : report.tex plotminmax.png 
-	pdflatex report.tex
-	pdflatex report.tex
+report.pdf : ./Report/report.tex Plotminmax.png 
+	pdflatex ./Report/report.tex
+	pdflatex ./Report/report.tex
      #bibtex report
 
-	pdflatex report.tex
+	pdflatex ./Report/report.tex
 #Question 7
 # Presentation 
 
