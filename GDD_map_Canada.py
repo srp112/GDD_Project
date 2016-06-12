@@ -34,7 +34,7 @@ lats = [47.570861, 49.406457, 50.834696, 52.139572, 45.500137, 43.670495]
 x,y = map(lons,lats)
 # convert back to lat/lon
 
-marker_string = get_marker_color(mag)
+marker_string = get_marker_color(GDD)
 map.plot(x, y, marker_string, markersize=10)  # plot a colorful dot there
 
 labels = ['St. John\'s', 'Vancouver', 'Regina', 'Saskatoon', 'Montreal', 'Toronto']
