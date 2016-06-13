@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 from  more_itertools import unique_everseen
 def MinMax(file_name,year, mode):
-    """Cities.txt Year as an argument"""
+    """Cities.txt Year as an argument.
+    This program plots the minimum and maximum temperature of the cities (as in Cities.txt) for given year"""
     try:
         with open(file_name, 'r') as the_file:
           filename=the_file.read()
@@ -48,7 +49,7 @@ def MinMax(file_name,year, mode):
             plt.pause(2)
             plt.draw()
             figs=None
-            save_plot = 'Plot{0:02d}.png'
+            save_plot = 'plots/'+line+'_MinMax.png'
             #save_plot = PdfPages("Min_Max_Daily_Temp.pdf")
             if figs is None:
                figs = [plt.figure(n) for n in plt.get_fignums()]
