@@ -1,45 +1,39 @@
-all: report.pdf cities.txt
+all: ./data/*.csv MakeMinMaxPlots GetGDD PlotCumGDD OQ2 OQ3 Report
 
 #Question 1
-data.csv :
-	curl -o data.csv ftp://client_climate@ftp.tor.ec.gc.ca/Pub/Get_More_Data_Plus_de_donnees/Station%20Inventory%20EN.csv
-
-#data.csv: curl -o data.csv ftp://client_climate@ftp.tor.ec.gc.ca/Pub/#Get_More_Data_Plus_de_donnees/Station%20Inventory%20EN.csv
-     # python download.py
+./data/*.csv: download.py cities.txt
+	python download.py cities.txt 2012
 
 #Question 2
-Plotminmax.png : data.csv MinMax.py cities.txt  
-	python MinMax.py cities.txt 2010
-                                   #data.csv
+MakeMinMaxPlots: ./data/*.csv
+	python MinMax.py cities.txt 2015
 
 #Question 3
+GetGDD: ./data/*.csv
+	python GDD_calculate.py cities.txt
 
-GDDdata.csv : data.csv GDD_calculate.py
-	python GDD_calculate.py GDDdata.csv
-      
 #Question 4
-Plot_accumulatedGDD.png : data.csv cumGDDplot.py
-	python cumGDDplot.py data.csv
+PlotCumGDD: GetGDD
+	python cumulativeGDDplot.py cities.txt
 
-#Question 5
-# Github
-      
-#Question 6   # Plot_accumulatedGDD.png
-report.pdf : ./Report/report.tex Plotminmax.png 
-	pdflatex ./Report/report.tex
-	pdflatex ./Report/report.tex
-     #bibtex report
+#Optional Question 2
+OQ2: GetGDD
+	python GDD_map_Canada.py cities.txt 2015
 
-	pdflatex ./Report/report.tex
-#Question 7
-# Presentation 
+#Optional Question 3
+OQ3: ./data/*.csv
+	python GDDTbase.py cities.txt 2015
 
-#Question 8 : it has done (workflow)
+#Question 6  
+Report: report.tex ./plots/
+	pdflatex report.tex
+	pdflatex report.tex
+	pdflatex report.tex
 
-#Question 9: Create a testsuite 
-
-#Question 10: adequate documentation
-
-#clean:
-#   rm -f report.log report.aux report.pdf
-#   rm -f data.csv plot.png
+clean:
+	rm -rf data
+	rm -rf plots
+	rm -rf log_download.txt
+	rm -rf report.aux
+	rm -rf report.log
+	rm -rf report.pdf

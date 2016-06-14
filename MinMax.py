@@ -49,8 +49,8 @@ def MinMax(file_name,year, mode):
             title='Min/Max Daily Temp for ' +line + ' Year - '+year
             plt.title(title,fontsize=14)
             plt.legend()
-            plt.pause(2)
-            plt.draw()
+            #plt.pause(2)
+            #plt.draw()
             figs=None
             save_plot = 'plots/'+line+'_MinMax.png'
             #save_plot = PdfPages("Min_Max_Daily_Temp.pdf")
