@@ -41,27 +41,43 @@ finally:
 extension=".csv"
 for index, line in enumerate(my_file.splitlines()):
 	file_name=line+extension
+	xData = []
+	yData = []
+	YearLabels = []
 	with open('data/'+ file_name, "rU") as files:
 		val = list(csv.DictReader(files))  
 		f = plt.figure(index + 1)
-		xData = []
-		yData = []
+		PrevYear = ''
+		YearIndex = -1
+		CumSum = 0
 		for row in val:
-			if row['Min Temp'] != '' and row['Max Temp'] != '':
-				GDD = ((float(row['Min Temp']) + float(row['Max Temp'])) / 2) - 10
-				if GDD < 0:
-					GDD = 0
-				xData.append(dt.date(int(row['Year']), int(row['Month']), int(row['Day'])))
-				yData.append(GDD)
+			CurrentYear = row['Year']
+			if CurrentYear != PrevYear:
+				PrevYear = CurrentYear
+				xData.append([])
+				yData.append([])
+				YearLabels.append(CurrentYear)
+				YearIndex += 1
+				CumSum = 0
+			if row['GDD'] != '':
+				CumSum += float(row['GDD'])
+				#xData[YearIndex].append(dt.date(int(row['Year']), int(row['Month']), int(row['Day'])))
+				xData[YearIndex].append(dt.date(2016, int(row['Month']), int(row['Day'])))
+				yData[YearIndex].append(CumSum)
+
 		ax = plt.gca()
-		ax.plot(xData, yData, label = line)
+		for x, y, year in zip(xData, yData, YearLabels):
+			ax.plot(x, y, label = year)
+		plt.legend()
 		plt.title('GDD of ' + line)
 
 		xax = ax.get_xaxis() # get the x-axis
 		adf = xax.get_major_formatter() # the the auto-formatter
 
-		adf.scaled[1.0] = '%Y/%m/%d' # set the > 1d < 1m scale to Y-m-d
-		adf.scaled[30.] = '%Y/%m' # set the > 1m < 1Y scale to Y-m
-		adf.scaled[365.] = '%Y' # set the > 1y scale to Y
+		adf.scaled[1.0] = '%m/%d' # set the > 1d < 1m scale to Y-m-d
+		adf.scaled[30.] = '%m' # set the > 1m < 1Y scale to Y-m
+		adf.scaled[365.] = '%m' # set the > 1y scale to Y
+
 		plt.draw()
+		#plt.show()
 		f.savefig(FolderName + '/' + line + '_GddPlot', format = 'png')
