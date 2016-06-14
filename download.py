@@ -130,7 +130,6 @@ for row in StationInventoryReader:
 											Cities[index][3].append([row['Station ID'], row['Latitude (Decimal Degrees)'], row['Longitude (Decimal Degrees)'], 1])
 										else:
 											StationIndex = StationIndex[0]
-											#print(Cities[index][3][StationIndex][3])
 											Cities[index][3][StationIndex][3] += 1
 										for i in range(0, min(len(DataReader), NumOfDays)):
 											Data[index].append([DataReader[i]['Year'], DataReader[i]['Month'], DataReader[i]['Day'], 																	DataReader[i]['Max Temp (°C)'], DataReader[i]['Min Temp (°C)']])
