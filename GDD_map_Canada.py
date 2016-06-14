@@ -7,6 +7,10 @@ FolderName = 'data'
 
 Data = []
 
+Year = sys.argv[2]
+
+fig = plt.figure()
+
 #Read GDD data
 with open(sys.argv[1].split('.')[0] + 'Map.txt', 'r') as cf:
 	for line in cf.read().splitlines():
@@ -16,7 +20,7 @@ with open(sys.argv[1].split('.')[0] + 'Map.txt', 'r') as cf:
 			reader = csv.DictReader(f)
 			GDDSum = 0
 			for row in reader:
-				if row['Year'] == '2015':
+				if row['Year'] == Year:
 					if row['GDD'] != '':
 						GDDSum += float(row['GDD'])
 			#City Name, latitude, longitude, GDD sum
@@ -47,18 +51,20 @@ lons = [city[2] for city in Data]
 magnitudes = [city[3] for city in Data]
 labels = [city[0] for city in Data]
 
+
+
 min_marker_size = 2.5
 for lon, lat, mag, name in zip(lons, lats, magnitudes, labels):
 	x,y = MyMap(lon, lat)
 	msize = mag * min_marker_size
-	print(name, ' ', mag)
 	marker_string = get_marker_color(mag)
 	MyMap.plot(x, y, marker_string, markersize=10)
 	plt.text(x+100000,y+150000, name) #distance of labels: 10 Km East and 10 Km North
-
 plt.text(5, 1000000, r'GDD > 900', color='g')
 plt.text(5, 500000, r'GDD > 510', color='y')
 plt.text(5, 100000, r'GDD < 510', color='r')
 plt.text(5, 1500000, r'no data', color='w')
-plt.title(r'Acumulated GDD for 2015', fontsize=20, color='b')
-plt.show()
+plt.title(r'Acumulated GDD for ' + Year, fontsize=20, color='b')
+plt.draw()
+save_plot = 'plots/GDDMap_' + Year + '.png'
+fig.savefig(save_plot, format='png')
