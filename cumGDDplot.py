@@ -74,9 +74,9 @@ for index, line in enumerate(my_file.splitlines()):
 		xax = ax.get_xaxis() # get the x-axis
 		adf = xax.get_major_formatter() # the the auto-formatter
 
-		adf.scaled[1.0] = '%m/%d' # set the > 1d < 1m scale to Y-m-d
-		adf.scaled[30.] = '%m' # set the > 1m < 1Y scale to Y-m
-		adf.scaled[365.] = '%m' # set the > 1y scale to Y
+		adf.scaled[1.0] = '%Y/%m/%d' # set the > 1d < 1m scale to Y-m-d
+        	adf.scaled[12.] = '%Y/%m' # set the > 1m < 1Y scale to Y-m
+        	adf.scaled[365.] = '%Y' # set the > 1y scale to Y
 
 		plt.draw()
 		#plt.show()
