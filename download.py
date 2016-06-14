@@ -69,7 +69,7 @@ Cities = []
 try:
 	for line in CityFile:
 		line = line[0:len(line) - 1]
-		Cities.append([line.split(',')[0].lower(), line.split(',')[1].lower(), list(range(ToYear, date.today().year + 1))])
+		Cities.append([line.split(',')[0].lower(), line.split(',')[1].lower(), list(range(ToYear, date.today().year + 1)), []])
 	CityFile.close()
 except IndexError:
 	log('Invalid input in City input file, expected \'CityName, ProvinceName\'')
@@ -123,11 +123,15 @@ for row in StationInventoryReader:
 											MissingData += 1
 										
 									if MissingData / NumOfDays <= MissingDataThreshold:
-										log('Downloading data for ' + city[0] + ', year ' + str(year))
-										try:							
-											Cities[index][2].remove(year)
-										except IndexError:
-											print('IndexError at index ', str(index))
+										log('Downloading data for ' + city[0] + ', year ' + str(year))							
+										Cities[index][2].remove(year)
+										StationIndex = [i for i, x in enumerate(Cities[index][3]) if x[0] == row['Station ID']]
+										if StationIndex == []:
+											Cities[index][3].append([row['Station ID'], row['Latitude (Decimal Degrees)'], row['Longitude (Decimal Degrees)'], 1])
+										else:
+											StationIndex = StationIndex[0]
+											#print(Cities[index][3][StationIndex][3])
+											Cities[index][3][StationIndex][3] += 1
 										for i in range(0, min(len(DataReader), NumOfDays)):
 											Data[index].append([DataReader[i]['Year'], DataReader[i]['Month'], DataReader[i]['Day'], 																	DataReader[i]['Max Temp (°C)'], DataReader[i]['Min Temp (°C)']])
 									else:
@@ -144,6 +148,18 @@ except Exception as e:
 	FolderName = ''
 finally:
     os.umask(original_umask)
+
+try:
+	# Location file name
+	with open(sys.argv[1].split('.')[0] + 'Map' + '.txt' ,'w') as f:
+		for city in Cities:
+			index = 0
+			for i in range(1, len(city[3])):
+				if city[3][i][3] > city[3][index][3]:
+					index = i
+			f.write(city[0] + ',' + city[1] + ',' + city[3][index][1] + ',' + city[3][index][2] + '\n')
+except:
+	log('Failed to create Map file for cities')
     
 for index, city in enumerate(Cities):
 	filename = city[0] + ',' + city[1]
