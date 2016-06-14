@@ -1,77 +1,87 @@
-import sys, argparse, csv
-import numpy as np
-import scipy.linalg as la
+#the cummulative GDD plot
+import sys, argparse, csv, os
+
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_pdf import PdfPages
-from  more_itertools import unique_everseen
-from scipy.interpolate import spline
+import matplotlib.dates as dates
+import datetime as dt
 
-def Dif_GDD(file_name,year, mode):
-
-  with open(file_name, 'r') as the_file:
-    filename=the_file.read() 
-    
-  my_file = filename
-
-  extension=".csv"
-  for line in my_file.splitlines():
-      file_name=line+extension  #createlist of csv file based on Cities.txt file
-      
-     
-      try:
-        with open('data/'+file_name, "r") as files:
+FolderName = 'plots'
+def open_file(file_name, mode):
+	"""Open a file."""
+	try:
+		with open(sys.argv[1], 'r') as the_file:
+			filename=the_file.read()
           
-          user_input=year
-          check_year_in_file=[x[0] for x in csv.reader(files)]
-          
-          if user_input in check_year_in_file:
-           with open('data/'+file_name, "rU") as files: 
-            GDD_dif = [x[5:11] for x in csv.reader(files) if str(x[0]) == year]
-            GDD_1 = list(zip(*GDD_dif))[0]
-            GDD_1 = ['0' if x is '' else x for x in GDD_1]
-            GDD_2 = list(zip(*GDD_dif))[1]
-            GDD_2 = ['0' if x is '' else x for x in GDD_2]
-            GDD_3 = list(zip(*GDD_dif))[2]
-            GDD_3 = ['0' if x is '' else x for x in GDD_3]
-            GDD_4 = list(zip(*GDD_dif))[3]
-            GDD_4 = ['0' if x is '' else x for x in GDD_4]
-            GDD_5 = list(zip(*GDD_dif))[4]
-            GDD_5 = ['0' if x is '' else x for x in GDD_5]
-            GDD_6 = list(zip(*GDD_dif))[5]
-            GDD_6 = ['0' if x is '' else x for x in GDD_6]
-            fig = plt.figure()
-            #GDD_1S = np.linspace(GDD_1.min(), GDD_1.max(), 300)
-            #power_smooth = spline(GDD_1, power, GDD_1S)
-            plt.plot(GDD_1, 'red', label = "Tbase=10")
-            plt.plot(GDD_2, 'green', label = "Tbase=11")
-            plt.plot(GDD_3, 'blue', label = "Tbase=12")
-            plt.plot(GDD_4, 'black', label="Tbase=13")
-            plt.plot(GDD_5,'yellow', label="Tbase=14")
-            plt.plot(GDD_6, 'grey', label="Tbase=15")
-            plt.xlim(0, 400)
-            plt.xlabel("Days")
-            plt.ylabel("GDD")
-            plt.title('Different GDD in ' +line + ' Year - '+year, color = 'red')
-            plt.legend()
-            #plt.pause(2) 
-            plt.grid()
-            plt.draw()
-            figs=None
-            save_plot = 'plots/'+line+'_DifGDD.png'
-            if figs is None:
-              figs = [plt.figure(n) for n in plt.get_fignums()]
-            for count,fig in enumerate(figs):
-              fig.savefig(save_plot.format(count), format='png')
-          
-          else:
-            print("No data available for Year - "+year)  
-            break
-     
-             
-      except IOError as err:
-        print("error", err)
+	except IOError as err:
+		print("Unable to open the file", file_name, "Ending program.\n", err)
+		input("\n\nPress the enter key to exit.")
+		sys.exit()
+	else:
+		return filename
 
-my_file = Dif_GDD(sys.argv[1],sys.argv[2], 'r') 
+Year = 0
 
-       
-        
+"""Cities.txt file as an argument"""     
+try:
+	my_file = open_file(sys.argv[1], 'r')
+	Year = sys.argv[2]
+except:
+	print("program needs two arguments", "\nEnding program...\n")
+	sys.exit()
+
+try:
+	original_umask = os.umask(0)
+	if not os.path.exists(FolderName):
+		os.makedirs(FolderName, 0o777)
+except Exception as e:
+	print("Failed to create 'data' directory, e = " + str(e))
+	FolderName = ''
+finally:
+    os.umask(original_umask)
+
+extension=".csv"
+for index, line in enumerate(my_file.splitlines()):
+	file_name=line+extension
+	xData = []
+	yData = []
+	TBaseLabels = []
+	with open('data/'+ file_name, "rU") as files:
+		val = list(csv.DictReader(files))  
+		f = plt.figure(index + 1)
+		tBaseIndex = -1
+		for tbase in range(10, 16):
+			xData.append([])
+			yData.append([])
+			TBaseLabels.append(tbase)
+			tBaseIndex += 1
+			CumSum = 0
+			for row in val:
+				if row['Year'] == Year:
+					MinTemp = row['Min Temp']
+					MaxTemp = row['Min Temp']
+					if MinTemp != '' and MinTemp != '':
+						upper = min(float(MinTemp), 30)
+						lower = float(MaxTemp)
+						GDD = round(((upper + lower) / 2) - tbase, 2)
+						if GDD < 0:
+							GDD = 0
+						CumSum += GDD
+						xData[tBaseIndex].append(dt.date(2016, int(row['Month']), int(row['Day'])))
+						yData[tBaseIndex].append(CumSum)
+
+		ax = plt.gca()
+		for x, y, tbase in zip(xData, yData, TBaseLabels):
+			ax.plot(x, y, label = tbase)
+		plt.legend()
+		plt.title('GDD of ' + line)
+
+		xax = ax.get_xaxis() # get the x-axis
+		adf = xax.get_major_formatter() # the the auto-formatter
+
+		adf.scaled[1.0] = '%m/%d' # set the > 1d < 1m scale to Y-m-d
+		adf.scaled[30.] = '%m' # set the > 1m < 1Y scale to Y-m
+		adf.scaled[365.] = '%m' # set the > 1y scale to Y
+
+		plt.draw()
+		#plt.show()
+		f.savefig(FolderName + '/' + line + '_GddPlot', format = 'png')
