@@ -1,0 +1,6 @@
+st. john's,newfoundland
+vancouver,british columbia
+regina,saskatchewan
+saskatoon,saskatchewan
+montreal,quebec
+toronto,ontario
