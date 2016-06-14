@@ -3,7 +3,10 @@ import numpy as np
 import scipy.linalg as la
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
-from  more_itertools import unique_everseen
+import os
+
+FolderName = 'plots'
+
 def MinMax(file_name,year, mode):
     """Cities.txt Year as an argument.
     This program plots the minimum and maximum temperature of the cities (as in Cities.txt) for given year"""
@@ -49,7 +52,6 @@ def MinMax(file_name,year, mode):
             plt.pause(2)
             plt.draw()
             figs=None
-            #save_plot = 'Plot{0:02d}.png'
             save_plot = 'plots/'+line+'_MinMax.png'
             #save_plot = PdfPages("Min_Max_Daily_Temp.pdf")
             if figs is None:
@@ -67,6 +69,16 @@ def MinMax(file_name,year, mode):
       except IOError as err:
         print("error", err)
 try:
+	original_umask = os.umask(0)
+	if not os.path.exists(FolderName):
+		os.makedirs(FolderName, 0o777)
+except Exception as e:
+	print("Failed to create 'data' directory, e = " + str(e))
+	FolderName = ''
+finally:
+	os.umask(original_umask)
+
+try:
        my_file = MinMax(sys.argv[1],sys.argv[2], 'r') 
 except:
        print("MinMax needs two arguments. Ex- MinMax.py Cities.txt 2010", "\nEnding program...\n")
@@ -75,7 +87,6 @@ except:
         
 
         
-
 
 
 
