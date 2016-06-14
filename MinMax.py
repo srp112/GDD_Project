@@ -49,8 +49,8 @@ def MinMax(file_name,year, mode):
             plt.pause(2)
             plt.draw()
             figs=None
-            save_plot = 'Plot{0:02d}.png'
-            #save_plot = 'plots/'+line+'_MinMax.png'
+            #save_plot = 'Plot{0:02d}.png'
+            save_plot = 'plots/'+line+'_MinMax.png'
             #save_plot = PdfPages("Min_Max_Daily_Temp.pdf")
             if figs is None:
                figs = [plt.figure(n) for n in plt.get_fignums()]
