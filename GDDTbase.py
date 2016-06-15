@@ -84,4 +84,4 @@ for index, line in enumerate(my_file.splitlines()):
 
 		plt.draw()
 		#plt.show()
-		f.savefig(FolderName + '/' + line + '_GddPlot', format = 'png')
+		f.savefig(FolderName + '/' + line + '_Tbase_GddPlot.png', format = 'png')
