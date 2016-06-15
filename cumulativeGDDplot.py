@@ -1,4 +1,4 @@
-#the cummulative GDD plot
+
 import sys, argparse, csv, os
 
 import matplotlib.pyplot as plt
