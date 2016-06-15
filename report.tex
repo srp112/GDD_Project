@@ -5,7 +5,7 @@
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{caption}
-
+\usepackage{gensymb}
 \graphicspath{{./plots/}}
 \begin{document}
 {\centering
@@ -38,29 +38,10 @@ The program will also generate another text file that will contain the latitudes
 Hence, the program requires two command line arguments, a text file containing station name, province pair in each line and Year specified as 'yyyy' that specifies the time-line as 2016-Year. For example, if 2012 is provided as the year, the program will fetch data for 2012 till 2016 time-line.
 
 \section{Question 2}
-\section{Question 3}
-Write a command line program that takes arguments.\\
-\section{Question 4}
-\section{Question 5}
-\section{Question 6}
-\section{Question 7}
-\section{Question 8}
-\section{Question 9}
-\section{Question 10}
-\section{Question 1 optional}
-\section{Question 2 optional}
-\section{Question 3 optional}
-=======
-\section{Question 3}
-Write a command line program that takes arguments\\
-In the GDD calculation part, we have used the package argparse to handle the command line arguments. First, we set the csv argument which completes file path of cities file. Second, we set the tbase argument (default = 10) and tupper argument(default = 30) to apply in the GDD calculation.\\
-The data needed for GDD calculation are already downloaded and stored in the data folder with their filenames specified in citiex.txt file. In this program, it read these data directly from data folder, do calculation on each file, and store them separately. For the missing information in csv file, we will set the GDD to 0. The GDD calculation equation is below:
-
-In our program, we set the $ T_max$ value to the minimum between tupper and the maximum daily temperature and $ T_base$ to the 10. For example, on 15th, August, 2010 in Vancouver, the maximum temperature is 31.2 Celsius degrees which is more than 30 Celsius degrees, and the minimum temperature is 16.1 Celsius degrees. Hence the GDD equation to $(\frac{30+16.1}{2})-10$  
-and the GDD result is $13.05$ .
-Finally, we add the new GDD column to the existing data files, which is supposed to prevent creating more files in the project.
-In the next part, we are supposed to use the GDD calculation to create plots showing accumulated GDD vs time for selected cities.
-
+This programs depends on data downloaded by core task 1, i.e. download.py. It reads the city name available in cities.txt and try to locate the city's csv file in download folder. Once located it fetches minimum and maximum temperature for every city and for all the years mentioned in the csv files. After that, based on the argument provided it plots the minimum and maximum temperature plot for every city in cities.txt file and for the year chosen.\\
+Ex-\\
+           python MinMax.py cities.txt 2010\\
+will plot the min or max temp for year 2010 for the cities given in cities.txt file as below.
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{{"st. john's,newfoundland_MinMax"}.png}
@@ -79,6 +60,20 @@ In the next part, we are supposed to use the GDD calculation to create plots sho
 \caption{F}
 \end{figure}
 
+
+\section{Question 3}
+Write a command line program that takes arguments\\
+In the GDD calculation part, we have used the package argparse to handle the command line arguments. First, we set the csv argument which completes file path of cities file. Second, we set the tbase argument (default = 10) and tupper argument(default = 30) to apply in the GDD calculation.\\
+The data needed for GDD calculation are already downloaded and stored in the data folder with their filenames specified in citiex.txt file. In this program, it read these data directly from data folder, do calculation on each file, and store them separately. For the missing information in csv file, we will set the GDD to 0. The GDD calculation equation is below:
+
+In our program, we set the $ T_max$ value to the minimum between tupper and the maximum daily temperature and $ T_base$ to the 10. For example, on 15th, August, 2010 in Vancouver, the maximum temperature is 31.2 Celsius degrees which is more than 30 Celsius degrees, and the minimum temperature is 16.1 Celsius degrees. Hence the GDD equation to $(\frac{30+16.1}{2})-10$  
+and the GDD result is $13.05$ .
+Finally, we add the new GDD column to the existing data files, which is supposed to prevent creating more files in the project.
+In the next part, we are supposed to use the GDD calculation to create plots showing accumulated GDD vs time for selected cities.
+
+\section{Question 4}
+Create plots showing accumulated GDD vs time for selected cities.\\
+Using the calculation of GDD, the data for the calculation is retrieved from the data folder with their respective filenames specified in cities.txt file. It calculates on each of the file, and plots them separately showing the cumulative GDD vs period for each cities. A loop is written to calculate the cumulative GDD for different years. 
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{{"st. john's,newfoundland_GddPlot"}.png}
@@ -99,21 +94,40 @@ In the next part, we are supposed to use the GDD calculation to create plots sho
 \caption{C}
 \end{figure}
 
+\section{Question 5}
+\section{Question 6}
+\section{Question 7}
+\section{Question 8}
+\section{Question 9}
+\section{Question 10}
+\section{Question 1 optional}
+\section{Question 2 optional GDD\_map\_Canada.py}
+This code plots a graph of Canada showing the accumulated GDD for several cities along a selected year. When calling the GDD\_map\_Canada.py the user has also to insert cities.txt and the year of interest. GDD\_map\_Canada.py is set to read the files available into the folder named data and the file cities.txt. From cities.txt it is read the cities names and coordinates, in order to plot them in the proper location onto the map of Canada. From the files in the data folder it is used the GDD contained in it and the respective years. \\
+The code then assigns different colors for accumulated GDD values for each city according to a scale (red for GDD lower than 510, yellow for GDD lower than 900 and green for GDD higher than 900). Finally, it is plotted a map of Canada in which each city is shown as a dot colored according to the accumulated GDD for that year.
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{GDDMap_2015.png}
 \caption{F}
 \end{figure}
 
-\begin{figure}
-\centering
-\includegraphics[scale=0.6]{{"st. john's,newfoundland_Tbase_GddPlot"}.png}
-\caption{C}
-\end{figure}
+\section{Question 3 optional}
 
+From the GDD equation, 
+\begin{equation}
+\textrm{GDD} = \left(\frac{T_{max} + T_{min}}{2}\right) - T_{base}
+\label{eqn:gdd}
+\end{equation}
+it is obvious that GDD changes with different base temperature. The base temperature is the temperature where the plant growth is 0. The lower the base temperature is, the more GDD is accumulated. Setting base temperature at 10\degree, 11\degree, 12\degree, 13\degree, 14\degree and 15\degree respectively, a graph for accumulated GDD of Toronto, Ontario is displayed in the following graph.\\
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{{"toronto,ontario_Tbase_GddPlot"}.png}
+\caption{C}
+\end{figure}
+
+It can be seen from October to May, no GDD is accumulated because the average temperature is lower than base temperature. From the middle of May, GDD starts to be accumulated, and the lower the base temperature is, the faster the GDD is accumulated.
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{{"st. john's,newfoundland_Tbase_GddPlot"}.png}
 \caption{C}
 \end{figure}
 
@@ -130,7 +144,6 @@ In the next part, we are supposed to use the GDD calculation to create plots sho
 %\includegraphics{Plot03.png}
 %\includegraphics{Plot04.png}
 %\includegraphics{Plot05.png}
-\subsubsection{section}
 \section{Experimental Results}
 In our experiments, we used 
 \subsection{result}
