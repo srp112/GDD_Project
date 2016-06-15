@@ -18,4 +18,5 @@ Required modules to run the project:
  - [Basemap](http://matplotlib.org/basemap/)
 
 To run the project, execute the following command
-    `make`
+
+    make
