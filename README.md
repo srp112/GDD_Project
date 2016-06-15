@@ -16,3 +16,6 @@ Required modules to run the project:
  - [Anaconda](https://www.continuum.io/downloads) or [Miniconda](http://conda.pydata.org/miniconda.html)
  - [Requests](http://docs.python-requests.org/en/master/)
  - [Basemap](http://matplotlib.org/basemap/)
+
+To run the project, execute the following command
+    `make`
