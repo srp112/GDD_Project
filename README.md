@@ -16,7 +16,11 @@ Required modules to run the project:
  - [Anaconda](https://www.continuum.io/downloads) or [Miniconda](http://conda.pydata.org/miniconda.html)
  - [Requests](http://docs.python-requests.org/en/master/)
  - [Basemap](http://matplotlib.org/basemap/)
+ - LaTeX
 
-To run the project, execute the following command
+How To Run
+ - Download the project as zip or clone it
+ - CD to the project directory
+ - Execute
 
     make
