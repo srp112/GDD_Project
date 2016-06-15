@@ -37,3 +37,4 @@ clean:
 	rm -rf report.aux
 	rm -rf report.log
 	rm -rf report.pdf
+	rm -rf __pycache__
